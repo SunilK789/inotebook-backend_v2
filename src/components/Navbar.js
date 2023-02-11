@@ -1,8 +1,13 @@
-import React from "react"
 import {Link, useLocation} from "react-router-dom"
+import React, {useContext, useState} from "react"
+import noteContext from "../context/notes/NoteState"
+import Alert from "../components/Alert"
 
 function Navbar() {
 	let location = useLocation()
+	// const context = useContext(noteContext)
+	// const {alerts} = context
+	// console.log(alerts.message)
 
 	return (
 		<>
@@ -60,6 +65,7 @@ function Navbar() {
 					</div>
 				</div>
 			</nav>
+			{/* <Alert></Alert> */}
 		</>
 	)
 }
