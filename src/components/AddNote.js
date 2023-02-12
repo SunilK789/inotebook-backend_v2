@@ -3,14 +3,14 @@ import noteContext from "../context/notes/noteContext"
 
 const AddNote = (props) => {
 	const context = useContext(noteContext)
-	const {addNewNote, showAlert} = context
+	const {addNewNote, editSingleNote} = context
 
-	const [note, setNote] = useState({title: "", description: "", tag: ""})
+	const [note, setNote] = useState({title: "", description: "", tag: "default"})
 
 	const handleClick = (e) => {
 		e.preventDefault()
 		addNewNote(note.title, note.description, note.tag)
-		showAlert("success", "Note added succesfully!")
+		//showAlert("success", "Note added succesfully!")
 	}
 	const handleOnChange = (e) => {
 		setNote({...note, [e.target.name]: e.target.value})
@@ -69,7 +69,7 @@ const AddNote = (props) => {
 					}`}
 					onClick={handleClick}
 				>
-					Save
+					Add Note
 				</button>
 			</div>
 		</div>
