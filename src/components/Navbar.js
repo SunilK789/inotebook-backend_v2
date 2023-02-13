@@ -69,11 +69,17 @@ const Navbar = (props) => {
 						<form className='d-flex'>
 							{userData ? (
 								<ul className='navbar-nav me-auto mb-2 mb-lg-0'>
-									<li className='nav-item btn btn-light mx-2'>
+									<li
+										style={{cursor: "auto"}}
+										className='nav-item btn btn-light mx-2'
+									>
 										<i className='fa-sharp fa-solid fa-user-tie'></i> &nbsp;Hi{" "}
 										{userData.user.name}
 									</li>
-									<li className='nav-item btn btn-light mx-2'>
+									<li
+										className='nav-item btn btn-light mx-2'
+										style={{cursor: "auto"}}
+									>
 										<i className='fa-solid fa-envelope'></i> &nbsp;
 										{userData.user.email}
 									</li>
