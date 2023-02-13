@@ -1,0 +1,4 @@
+{
+	"appService.defaultWebAppToDeploy": "/subscriptions/688aee56-fde7-4c4f-bfd3-d891b19732c6/AppServices/subscriptions/688aee56-fde7-4c4f-bfd3-d891b19732c6/resourceGroups/rg-iNotebook/providers/Microsoft.Web/sites/inotebuk",
+	"appService.deploySubpath": "."
+}
