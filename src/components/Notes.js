@@ -25,7 +25,18 @@ const Notes = (props) => {
 	}
 
 	useEffect(() => {
-		getNotes()
+		//getNotes()
+		console.log("useEffet from Notes.js token: ")
+		console.log(localStorage.getItem("token"))
+
+		if (localStorage.getItem("token")) {
+			console.log("From Note.js token: " + localStorage.getItem("token"))
+			getNotes()
+			console.log(
+				"useEffet from Notes.js token after getNotes(): " +
+					localStorage.getItem("token")
+			)
+		}
 	}, [])
 
 	const updateNote = (currentNote) => {
@@ -149,18 +160,19 @@ const Notes = (props) => {
 					</div>
 				</div>
 			</div>
-			{notes.length !== 0 && <h2>Your Notes:</h2>}
+			{notes && notes.length !== 0 && <h2>Your Notes:</h2>}
 			<div className='row my-3'>
-				{notes.map((note) => {
-					return (
-						<NoteItem
-							key={note._id}
-							updateNote={updateNote}
-							note={note}
-							showAlert={props.showAlert}
-						/>
-					)
-				})}
+				{notes &&
+					notes.map((note) => {
+						return (
+							<NoteItem
+								key={note._id}
+								updateNote={updateNote}
+								note={note}
+								showAlert={props.showAlert}
+							/>
+						)
+					})}
 			</div>
 		</>
 	)

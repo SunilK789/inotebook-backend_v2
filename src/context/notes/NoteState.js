@@ -1,14 +1,15 @@
 import React, {useState} from "react"
 import NoteContext from "./noteContext"
 
-const initialNotes = []
+//const initialNotes = []
 
 const host = "http://localhost:5000"
 
 const NoteState = (props) => {
-	const [notes, setNotes] = useState(initialNotes)
+	const [notes, setNotes] = useState(null)
 	const [alerts, setAlerts] = useState({message: "", type: ""})
 	const [token, setToken] = useState("")
+	const [userData, setUserData] = useState(null)
 
 	const showAlert = (message, type) => {
 		console.log("inside showAlert")
@@ -20,21 +21,34 @@ const NoteState = (props) => {
 			setAlerts({message: "", type: ""})
 		}, 2000)
 	}
+	const getUser = async () => {
+		const response = await fetch(`${host}/api/auth/getuser`, {
+			method: "POST", // *GET, POST, PUT, DELETE, etc.
+			headers: {
+				"Content-Type": "application/json",
+				"auth-token": localStorage.getItem("token"),
+			},
+		})
+		const json = await response.json() // parses JSON response into native JavaScript objects
+		console.log("From getUser token: " + localStorage.getItem("token"))
+		console.log("From getUser data: " + json)
+		setUserData(json)
+	}
+
 	//Get all notes
 	const getNotes = async () => {
+		console.log("NoteState -> getNotes befor api call: " + notes)
 		const response = await fetch(`${host}/api/note/getallnotes`, {
 			method: "GET", // *GET, POST, PUT, DELETE, etc.
 			headers: {
 				"Content-Type": "application/json",
-				"auth-token":
-					"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjNlNzJiYTZjOWZhMTY5NjI0MzE1NDIwIn0sImlhdCI6MTY3NjA5ODEwMX0.BZ4KgJsgw4TQrBBerlgBF46RTFqMcX9frEix1UOnocM",
-				// 'Content-Type': 'application/x-www-form-urlencoded',
+				"auth-token": localStorage.getItem("token"),
 			},
-			//body: JSON.stringify(data), // body data type must match "Content-Type" header
 		})
 		const json = await response.json() // parses JSON response into native JavaScript objects
 
 		setNotes(json)
+		console.log("NoteState -> getNotes: " + notes)
 	}
 
 	//Add a Note
@@ -44,8 +58,7 @@ const NoteState = (props) => {
 			method: "POST", // *GET, POST, PUT, DELETE, etc.
 			headers: {
 				"Content-Type": "application/json",
-				"auth-token":
-					"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjNlNzJiYTZjOWZhMTY5NjI0MzE1NDIwIn0sImlhdCI6MTY3NjA5ODEwMX0.BZ4KgJsgw4TQrBBerlgBF46RTFqMcX9frEix1UOnocM",
+				"auth-token": localStorage.getItem("token"),
 			},
 			body: JSON.stringify({title, description, tag}), // body data type must match "Content-Type" header
 		})
@@ -63,12 +76,12 @@ const NoteState = (props) => {
 			method: "DELETE", // *GET, POST, PUT, DELETE, etc.
 			headers: {
 				"Content-Type": "application/json",
-				"auth-token":
-					"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjNlNzJiYTZjOWZhMTY5NjI0MzE1NDIwIn0sImlhdCI6MTY3NjA5ODEwMX0.BZ4KgJsgw4TQrBBerlgBF46RTFqMcX9frEix1UOnocM",
+				"auth-token": localStorage.getItem("token"),
 			},
 			//body: JSON.stringify(id), // body data type must match "Content-Type" header
 		})
 
+		console.log(response.json)
 		const allNotes = await JSON.parse(JSON.stringify(notes))
 		const notesAfterDelete = allNotes.filter((note) => note._id !== id)
 		setNotes(notesAfterDelete)
@@ -82,13 +95,12 @@ const NoteState = (props) => {
 			method: "PUT", // *GET, POST, PUT, DELETE, etc.
 			headers: {
 				"Content-Type": "application/json",
-				"auth-token":
-					"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjNlNzJiYTZjOWZhMTY5NjI0MzE1NDIwIn0sImlhdCI6MTY3NjA5ODEwMX0.BZ4KgJsgw4TQrBBerlgBF46RTFqMcX9frEix1UOnocM",
+				"auth-token": localStorage.getItem("token"),
 			},
 			//body: JSON.stringify(note.title, note.description, note.tag), // body data type must match "Content-Type" header
 			body: JSON.stringify({title, description, tag}), // body data type must match "Content-Type" header
 		})
-
+		console.log(response.json)
 		const newNotes = await JSON.parse(JSON.stringify(notes))
 
 		for (let index = 0; index < newNotes.length; index++) {
@@ -115,8 +127,10 @@ const NoteState = (props) => {
 				getNotes,
 				setToken,
 				token,
-				alerts,
 				showAlert,
+				getUser,
+				userData,
+				setUserData,
 			}}
 		>
 			{props.children}

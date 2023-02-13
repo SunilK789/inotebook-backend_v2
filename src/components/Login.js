@@ -6,7 +6,7 @@ const host = "http://localhost:5000"
 
 const Login = (props) => {
 	const context = useContext(noteContext)
-	const {showAlert} = context
+	const {showAlert, getUser} = context
 	const navigate = useNavigate()
 	const [credencials, setCredencials] = useState({email: "", password: ""})
 
@@ -16,7 +16,7 @@ const Login = (props) => {
 	}
 	const handleSubmit = async (e) => {
 		e.preventDefault()
-		console.log("handleSubmit")
+		console.log("handleLoginSubmit")
 
 		const response = await fetch(`${host}/api/auth/login`, {
 			method: "POST", // *GET, POST, PUT, DELETE, etc.
@@ -35,10 +35,11 @@ const Login = (props) => {
 			showAlert("Invalid credencials", "danger")
 		} else {
 			localStorage.setItem("token", json.authToken)
-			console.log("Form logion page token: " + localStorage.getItem("token"))
-			console.log("Form logion page token2: " + json.authToken)
+			console.log("Form login page token: " + localStorage.getItem("token"))
+			console.log("Form login page token2: " + json.authToken)
 
 			showAlert("Login successfull!", "success")
+			getUser()
 			navigate("/")
 		}
 	}

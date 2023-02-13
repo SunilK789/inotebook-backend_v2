@@ -12,7 +12,7 @@ router.post(
 	"/createuser",
 	[
 		body("email", "Enter a valid email").isEmail(),
-		body("name", "Name must be atleast 5 character").isLength({min: 5}),
+		body("name", "Name must be atleast 3 character").isLength({min: 3}),
 		body("password", "Password must be atleast 5 character").isLength({min: 5}),
 	],
 	async (req, res) => {
@@ -97,7 +97,7 @@ router.post(
 
 			const data = {
 				user: {
-					id: user.id,
+					id: user._id,
 				},
 			}
 			const authToken = jwt.sign(data, JWT_SECRET)

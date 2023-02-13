@@ -8,9 +8,9 @@ var fetchuser = require("../middleware/fetchuser")
 //ROUTE 1: Get all notes using: POST "/api/note/getallnotes". Login required
 router.get("/getallnotes", fetchuser, async (req, res) => {
 	try {
-		const notes = await Note.find({note: req.user.id})
-
+		const notes = await Note.find({user: req.user.id})
 		res.json(notes)
+		//res.json(req.user)
 	} catch (error) {
 		console.error(error.message)
 		res.status(500).send("Some error occured!")

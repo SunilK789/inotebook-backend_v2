@@ -6,21 +6,24 @@ import Alert from "./Alert"
 const Navbar = (props) => {
 	let location = useLocation()
 	const context = useContext(noteContext)
-	const {alerts, showAlert} = context
+	const {alerts, showAlert, userData, getUser, setUserData} = context
 
-	// useEffect(() => {
-	// 	console.log(token)
-	// }, [])
 	const navigate = useNavigate()
 
 	const handleLogout = (e) => {
 		e.preventDefault()
-		console.log("before logout:" + localStorage.getItem("token"))
 		localStorage.clear()
-		console.log("after logout:" + localStorage.getItem("token"))
+		setUserData(null)
 		showAlert("Logout successfull", "success")
 		navigate("/login")
 	}
+	useEffect(() => {
+		if (userData) {
+			getUser()
+			console.log(userData.user.name)
+			console.log(userData.user.email)
+		}
+	}, [])
 	return (
 		<>
 			<nav className='navbar navbar-expand-lg navbar-dark bg-dark'>
@@ -64,6 +67,20 @@ const Navbar = (props) => {
 							</li>
 						</ul>
 						<form className='d-flex'>
+							{userData ? (
+								<ul className='navbar-nav me-auto mb-2 mb-lg-0'>
+									<li className='nav-item btn btn-light mx-2'>
+										<i className='fa-sharp fa-solid fa-user-tie'></i> &nbsp;Hi{" "}
+										{userData.user.name}
+									</li>
+									<li className='nav-item btn btn-light mx-2'>
+										<i className='fa-solid fa-envelope'></i> &nbsp;
+										{userData.user.email}
+									</li>
+								</ul>
+							) : (
+								""
+							)}
 							{localStorage.getItem("token") === null ||
 							localStorage.getItem("token") === "undefined" ? (
 								<div>
@@ -83,11 +100,7 @@ const Navbar = (props) => {
 									</Link>
 								</div>
 							) : (
-								<button
-									role='button'
-									className='btn btn-primary mx-1'
-									onClick={handleLogout}
-								>
+								<button className='btn btn-primary mx-1' onClick={handleLogout}>
 									Logout &nbsp;
 									<i className='fa-solid fa-arrow-right-from-bracket'></i>
 								</button>

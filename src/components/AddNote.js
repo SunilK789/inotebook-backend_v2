@@ -5,7 +5,7 @@ const AddNote = (props) => {
 	const context = useContext(noteContext)
 	const {addNewNote, editSingleNote} = context
 
-	const [note, setNote] = useState({title: "", description: "", tag: ""})
+	const [note, setNote] = useState({title: "", description: "", tag: "default"})
 
 	const handleClick = (e) => {
 		e.preventDefault()
@@ -32,7 +32,6 @@ const AddNote = (props) => {
 							id='title'
 							name='title'
 							onChange={handleOnChange}
-							value={note.title}
 						/>
 					</div>
 				</div>
@@ -47,7 +46,6 @@ const AddNote = (props) => {
 							name='description'
 							row='7'
 							onChange={handleOnChange}
-							value={note.description}
 						></textarea>
 					</div>
 				</div>
@@ -62,7 +60,6 @@ const AddNote = (props) => {
 							id='tag'
 							name='tag'
 							onChange={handleOnChange}
-							value={note.tag}
 						/>
 					</div>
 				</div>
