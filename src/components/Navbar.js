@@ -1,14 +1,26 @@
-import {Link, useLocation} from "react-router-dom"
-import React, {useContext, useState} from "react"
-import noteContext from "../context/notes/NoteState"
-import Alert from "../components/Alert"
+import {Link, useLocation, useNavigate} from "react-router-dom"
+import React, {useContext, useEffect} from "react"
+import noteContext from "../context/notes/noteContext"
+import Alert from "./Alert"
 
-function Navbar() {
+const Navbar = (props) => {
 	let location = useLocation()
-	// const context = useContext(noteContext)
-	// const {alerts} = context
-	// console.log(alerts.message)
+	const context = useContext(noteContext)
+	const {alerts, showAlert} = context
 
+	// useEffect(() => {
+	// 	console.log(token)
+	// }, [])
+	const navigate = useNavigate()
+
+	const handleLogout = (e) => {
+		e.preventDefault()
+		console.log("before logout:" + localStorage.getItem("token"))
+		localStorage.clear()
+		console.log("after logout:" + localStorage.getItem("token"))
+		showAlert("Logout successfull", "success")
+		navigate("/login")
+	}
 	return (
 		<>
 			<nav className='navbar navbar-expand-lg navbar-dark bg-dark'>
@@ -52,20 +64,39 @@ function Navbar() {
 							</li>
 						</ul>
 						<form className='d-flex'>
-							<input
-								className='form-control me-2'
-								type='search'
-								placeholder='Search'
-								aria-label='Search'
-							/>
-							<button className='btn btn-outline-success' type='submit'>
-								Search
-							</button>
+							{localStorage.getItem("token") === null ||
+							localStorage.getItem("token") === "undefined" ? (
+								<div>
+									<Link
+										role='button'
+										className='btn btn-primary mx-1'
+										to='/login'
+									>
+										Login &nbsp;<i className='fa-solid fa-right-to-bracket'></i>
+									</Link>
+									<Link
+										role='button'
+										className='btn btn-primary mx-1'
+										to='/signup'
+									>
+										Signup &nbsp;<i className='fa-solid fa-user-plus'></i>
+									</Link>
+								</div>
+							) : (
+								<button
+									role='button'
+									className='btn btn-primary mx-1'
+									onClick={handleLogout}
+								>
+									Logout &nbsp;
+									<i className='fa-solid fa-arrow-right-from-bracket'></i>
+								</button>
+							)}
 						</form>
 					</div>
 				</div>
 			</nav>
-			{/* <Alert></Alert> */}
+			<Alert alert={alerts}></Alert>
 		</>
 	)
 }

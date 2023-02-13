@@ -6,16 +6,9 @@ const initialNotes = []
 const host = "http://localhost:5000"
 
 const NoteState = (props) => {
-	const note = {
-		id: "",
-		title: "",
-		description: "",
-		tag: "",
-	}
-
 	const [notes, setNotes] = useState(initialNotes)
 	const [alerts, setAlerts] = useState({message: "", type: ""})
-	const [editSingleNote, setEditSingleNote] = useState(note)
+	const [token, setToken] = useState("")
 
 	const showAlert = (message, type) => {
 		console.log("inside showAlert")
@@ -27,7 +20,6 @@ const NoteState = (props) => {
 			setAlerts({message: "", type: ""})
 		}, 2000)
 	}
-
 	//Get all notes
 	const getNotes = async () => {
 		const response = await fetch(`${host}/api/note/getallnotes`, {
@@ -58,12 +50,10 @@ const NoteState = (props) => {
 			body: JSON.stringify({title, description, tag}), // body data type must match "Content-Type" header
 		})
 
-		//Get latest notes from backend
-		getNotes()
-		console.log("Adde note for the id")
+		const newNote = await response.json()
 
-		// setNotes(notes.concat(note))
-		// showAlert("success", "Note added succesfully!")
+		setNotes(notes.concat(newNote))
+		showAlert("Note added!", "success")
 	}
 
 	//Delete a Note
@@ -79,9 +69,10 @@ const NoteState = (props) => {
 			//body: JSON.stringify(id), // body data type must match "Content-Type" header
 		})
 
-		//Get latest notes from backend
-		getNotes()
-		console.log("Deleting note for the id: " + id)
+		const allNotes = await JSON.parse(JSON.stringify(notes))
+		const notesAfterDelete = allNotes.filter((note) => note._id !== id)
+		setNotes(notesAfterDelete)
+		showAlert("Note deleted!", "success")
 	}
 
 	//Edit a Note
@@ -97,10 +88,20 @@ const NoteState = (props) => {
 			//body: JSON.stringify(note.title, note.description, note.tag), // body data type must match "Content-Type" header
 			body: JSON.stringify({title, description, tag}), // body data type must match "Content-Type" header
 		})
-		//console.log(response)
-		getNotes()
 
-		console.log("From noteState:" + note.title, note.description, note.tag)
+		const newNotes = await JSON.parse(JSON.stringify(notes))
+
+		for (let index = 0; index < newNotes.length; index++) {
+			const element = newNotes[index]
+			if (element._id === id) {
+				newNotes[index].title = title
+				newNotes[index].description = description
+				newNotes[index].tag = tag
+			}
+			break
+		}
+
+		setNotes(newNotes)
 	}
 
 	return (
@@ -112,7 +113,10 @@ const NoteState = (props) => {
 				deleteNote,
 				alerts,
 				getNotes,
-				setEditSingleNote,
+				setToken,
+				token,
+				alerts,
+				showAlert,
 			}}
 		>
 			{props.children}

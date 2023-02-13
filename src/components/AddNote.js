@@ -5,12 +5,13 @@ const AddNote = (props) => {
 	const context = useContext(noteContext)
 	const {addNewNote, editSingleNote} = context
 
-	const [note, setNote] = useState({title: "", description: "", tag: "default"})
+	const [note, setNote] = useState({title: "", description: "", tag: ""})
 
 	const handleClick = (e) => {
 		e.preventDefault()
 		addNewNote(note.title, note.description, note.tag)
-		//showAlert("success", "Note added succesfully!")
+
+		//setNote({title: "", description: "", tag: ""})
 	}
 	const handleOnChange = (e) => {
 		setNote({...note, [e.target.name]: e.target.value})
@@ -31,6 +32,7 @@ const AddNote = (props) => {
 							id='title'
 							name='title'
 							onChange={handleOnChange}
+							value={note.title}
 						/>
 					</div>
 				</div>
@@ -45,6 +47,7 @@ const AddNote = (props) => {
 							name='description'
 							row='7'
 							onChange={handleOnChange}
+							value={note.description}
 						></textarea>
 					</div>
 				</div>
@@ -59,13 +62,16 @@ const AddNote = (props) => {
 							id='tag'
 							name='tag'
 							onChange={handleOnChange}
+							value={note.tag}
 						/>
 					</div>
 				</div>
 				<button
 					type='button'
 					className={`btn btn-primary ${
-						note.title && note.description ? "" : "disabled"
+						note.title.length < 3 || note.description.length < 3
+							? "disabled"
+							: ""
 					}`}
 					onClick={handleClick}
 				>

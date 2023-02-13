@@ -2,11 +2,12 @@ import React, {useContext, useEffect, useRef, useState} from "react"
 import noteContext from "../context/notes/noteContext"
 import NoteItem from "./NoteItem"
 
-const Notes = () => {
+const Notes = (props) => {
 	const context = useContext(noteContext)
-	const {notes, getNotes, editNote, setEditSingleNote} = context
+	const {notes, getNotes, editNote, showAlert} = context
 
 	const ref = useRef(null)
+	const refClose = useRef(null)
 	const [note, setNote] = useState({
 		id: "",
 		title: "",
@@ -15,11 +16,9 @@ const Notes = () => {
 	})
 
 	const handleUpdateClick = (e) => {
-		e.preventDefault()
-		console.log(note)
-		//setEditSingleNote(note)
 		editNote(note.id, note.title, note.description, note.tag)
-		//showAlert("success", "Note added succesfully!")
+		showAlert("Note update!", "success")
+		refClose.current.click()
 	}
 	const handleOnChange = (e) => {
 		setNote({...note, [e.target.name]: e.target.value})
@@ -37,6 +36,7 @@ const Notes = () => {
 			description: currentNote.description,
 			tag: currentNote.tag,
 		})
+		// props.showAlert("Note update!", "success")
 	}
 
 	return (
@@ -130,6 +130,7 @@ const Notes = () => {
 									type='button'
 									className='btn btn-secondary'
 									data-bs-dismiss='modal'
+									ref={refClose}
 								>
 									Close
 								</button>
@@ -137,6 +138,9 @@ const Notes = () => {
 									type='button'
 									className='btn btn-primary'
 									onClick={handleUpdateClick}
+									disabled={
+										note.title.length < 3 || note.description.length < 3
+									}
 								>
 									Update Note
 								</button>
@@ -148,7 +152,14 @@ const Notes = () => {
 			{notes.length !== 0 && <h2>Your Notes:</h2>}
 			<div className='row my-3'>
 				{notes.map((note) => {
-					return <NoteItem key={note._id} updateNote={updateNote} note={note} />
+					return (
+						<NoteItem
+							key={note._id}
+							updateNote={updateNote}
+							note={note}
+							showAlert={props.showAlert}
+						/>
+					)
 				})}
 			</div>
 		</>
