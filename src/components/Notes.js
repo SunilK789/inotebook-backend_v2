@@ -4,7 +4,7 @@ import NoteItem from "./NoteItem"
 
 const Notes = (props) => {
 	const context = useContext(noteContext)
-	const {notes, getNotes, editNote, showAlert} = context
+	const {notes, getNotes, editNote, showAlert, getUser} = context
 
 	const ref = useRef(null)
 	const refClose = useRef(null)
@@ -31,6 +31,7 @@ const Notes = (props) => {
 
 		if (localStorage.getItem("token")) {
 			console.log("From Note.js token: " + localStorage.getItem("token"))
+			getUser()
 			getNotes()
 			console.log(
 				"useEffet from Notes.js token after getNotes(): " +

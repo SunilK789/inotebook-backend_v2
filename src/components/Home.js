@@ -7,11 +7,7 @@ import {useNavigate} from "react-router-dom"
 const Home = () => {
 	const navigate = useNavigate()
 
-	// const context = useContext(noteContext)
-	// const {notes, getNotes} = context
-
 	useEffect(() => {
-		//console.log("From home token: " + localStorage.getItem("token"))
 		if (
 			localStorage.getItem("token") === null ||
 			localStorage.getItem("token") === "undefined"
