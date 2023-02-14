@@ -6,7 +6,7 @@ export default function Alert(props) {
 		return lower.charAt(0).toUpperCase() + lower.slice(1)
 	}
 	return (
-		<div className='container container my-3'>
+		<div className='container container my-4'>
 			<div style={{height: "50px"}} className=''>
 				{props.alert && (
 					<div
